@@ -524,6 +524,12 @@ nav a.blue-text{
 * {
   cursor: none;
 }
+#followImage {
+  visibility: hidden;
+}
+#followImage2 {
+  visibility: hidden;
+}
 img {
   -webkit-user-drag: none;
   width: 100%;
@@ -807,13 +813,25 @@ const isVisible2 = ref(false);
 provide('isPlaying', isPlaying); 
 provide('isVisible2', isVisible2); 
 const route = useRoute();
-const audio = ref(new Audio('/app/bgm3.mp3'));
+
+// 使用 import.meta.glob 批量导入音频文件
+const audioFiles = import.meta.glob('@/assets/app/*.mp3', { eager: true });
+// 将导入的音频转换为需要的格式
+const audioMap = Object.keys(audioFiles).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.mp3', ''); // 提取文件名作为 key
+    acc[key] = audioFiles[path].default; // 获取音频的默认导出
+    return acc;
+}, {});
+// 使用特定的音频文件
+const audio = ref(new Audio(audioMap['bgm2']));
+// const audio = ref(new Audio('/app/bgm3.mp3'));
+
 audio.value.loop = true;
 const logoSrc = computed(() => {  
-  return route.path === '/home' ? '/app/LOGO.png' : '/app/LOGO2.png'  
+  return route.path === '/home' ? imageMap['LOGO'] : imageMap['LOGO2']  
 })
 const mouseSrc = computed(() => {  
-  return route.path === '/home' ? '/app/mouse.png' : '/app/mouse2.png'  
+  return route.path === '/home' ? imageMap['mouse'] : imageMap['mouse2'] 
 })
 const classRet = computed(() => {
   return route.path === '/home' ? 'home' : 'default'
@@ -1076,13 +1094,30 @@ const navLink = () => {
 const isHomeRoute = computed(() => route.path === '/home');
 const isPhototRoute = computed(() => route.path === '/photo');
 
-const videoUrl2 = ref('/home/pv2_cn.mp4');
+// 使用 import.meta.glob 批量导入音频文件
+const videoFiles = import.meta.glob('@/assets/home/*.mp4', { eager: true });
+// 将导入的音频转换为需要的格式
+const videoMap = Object.keys(videoFiles).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.mp4', ''); // 提取文件名作为 key
+    acc[key] = videoFiles[path].default; // 获取音频的默认导出
+    return acc;
+}, {});
+// 使用特定的音频文件
+const videoUrl2 = ref(videoMap['pv']);
+// const videoUrl2 = ref('/home/pv2_cn.mp4');
 const closeModal2 = () => {
   isVisible2.value = false;
 };
 
 
-
+// 使用 import.meta.glob 批量导入图片
+const images = import.meta.glob('@/assets/app/*.png', { eager: true });
+// 将导入的图片转换为需要的格式
+const imageMap = Object.keys(images).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.png', ''); // 提取文件名作为 key
+    acc[key] = images[path].default; // 获取图片的默认导出
+    return acc;
+}, {});
 // // 引入 Swiper 组件和模块
 // import { Swiper, SwiperSlide } from 'swiper/vue';
 // import { Pagination, Navigation, Virtual } from 'swiper/modules';

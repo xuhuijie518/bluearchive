@@ -1242,32 +1242,53 @@ const comicdetail = () => {
   show5.value = !show5.value;
 }
 
+const image = import.meta.glob('@/assets/photo/comic/**/*.png', { eager: true });
+const imageMap = Object.keys(image).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/comic\//, '').replace('.png', '');
+  acc[relativePath] = image[path].default; // 存储完整解析路径
+  return acc;
+}, {});
+const image2 = import.meta.glob('@/assets/photo/comic/**/*.jpeg', { eager: true });
+const imageMap2 = Object.keys(image2).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/comic\//, '').replace('.jpeg', '');
+  acc[relativePath] = image2[path].default; // 存储完整解析路径
+  return acc;
+}, {});
+const image3 = import.meta.glob('@/assets/photo/**/*.jpeg', { eager: true });
+const imageMap3 = Object.keys(image3).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/photo\//, '').replace('.jpeg', '');
+  acc[relativePath] = image3[path].default; // 存储完整解析路径
+  return acc;
+}, {});
 const comics = ref([
-  { cover: '/photo/comic/cover/1.png', content: '/photo/comic/content/1.png', title: '第一部第一话：我们来迟了！' },
-  { cover: '/photo/comic/cover/2.png', content: '/photo/comic/content/2.jpeg', title: '第一部第二话：美好的事物' },
-  { cover: '/photo/comic/cover/3.png', content: '/photo/comic/content/3.jpeg', title: '第一部第三话：阿拜多斯的大家' },
-  { cover: '/photo/comic/cover/4.png', content: '/photo/comic/content/4.jpeg', title: '第一部第四话：阿洛娜的小提示' },
-  { cover: '/photo/comic/cover/5.png', content: '/photo/comic/content/5.jpeg', title: '第一部第五话：阿洛娜也想升级！？' },
-  { cover: '/photo/comic/cover/6.png', content: '/photo/comic/content/6.jpeg', title: '第一部第六话：共赴邀约吧！' },
-  { cover: '/photo/comic/cover/7.png', content: '/photo/comic/content/7.jpeg', title: '第一部第七话：阿洛娜的一天' },
-  { cover: '/photo/comic/cover/8.png', content: '/photo/comic/content/8.jpeg', title: '第一部第八话：还...还没有结束呢！' },
-  { cover: '/photo/comic/cover/9.png', content: '/photo/comic/content/9.png', title: '第二部第一话：宣传便利屋68的方法' },
-  { cover: '/photo/comic/cover/10.png', content: '/photo/comic/content/10.jpeg', title: '第二部第二话：泉奈在哪里呢？' },
-  { cover: '/photo/comic/cover/11.png', content: '/photo/comic/content/11.png', title: '第二部第三话：好想玩游戏！' },
-  { cover: '/photo/comic/cover/12.png', content: '/photo/comic/content/12.jpeg', title: '第二部第四话：爱丽丝的长头发' },
-  { cover: '/photo/comic/cover/13.png', content: '/photo/comic/content/13.png', title: '第二部第五话：来打总力战吧！' },
-  { cover: '/photo/comic/cover/14.png', content: '/photo/comic/content/14.png', title: '第二部第六话：吃冰粉吗？' },
-  { cover: '/photo/comic/cover/15.png', content: '/photo/comic/content/15.jpeg', title: '第二部第七话：蕴含强大力量的装备！' },
+  { cover: imageMap['cover/1'], content: imageMap['content/1'], title: '第一部第一话：我们来迟了！' },
+  { cover: imageMap['cover/2'], content: imageMap2['content/2'], title: '第一部第二话：美好的事物' },
+  { cover: imageMap['cover/3'], content: imageMap2['content/3'], title: '第一部第三话：阿拜多斯的大家' },
+  { cover: imageMap['cover/4'], content: imageMap2['content/4'], title: '第一部第四话：阿洛娜的小提示' },
+  { cover: imageMap['cover/5'], content: imageMap2['content/5'], title: '第一部第五话：阿洛娜也想升级！？' },
+  { cover: imageMap['cover/6'], content: imageMap2['content/6'], title: '第一部第六话：共赴邀约吧！' },
+  { cover: imageMap['cover/7'], content: imageMap2['content/7'], title: '第一部第七话：阿洛娜的一天' },
+  { cover: imageMap['cover/8'], content: imageMap2['content/8'], title: '第一部第八话：还...还没有结束呢！' },
+  { cover: imageMap['cover/9'], content: imageMap['content/9'], title: '第二部第一话：宣传便利屋68的方法' },
+  { cover: imageMap['cover/10'], content: imageMap2['content/10'], title: '第二部第二话：泉奈在哪里呢？' },
+  { cover: imageMap['cover/11'], content: imageMap['content/11'], title: '第二部第三话：好想玩游戏！' },
+  { cover: imageMap['cover/12'], content: imageMap2['content/12'], title: '第二部第四话：爱丽丝的长头发' },
+  { cover: imageMap['cover/13'], content: imageMap['content/13'], title: '第二部第五话：来打总力战吧！' },
+  { cover: imageMap['cover/14'], content: imageMap['content/14'], title: '第二部第六话：吃冰粉吗？' },
+  { cover: imageMap['cover/15'], content: imageMap2['content/15'], title: '第二部第七话：蕴含强大力量的装备！' },
 ]);
 const images = ref([
-  { pcimg: '/photo/pc/1.jpeg', mobileimg: '/photo/mobile/1.jpeg' },
-  { pcimg: '/photo/pc/2.jpeg', mobileimg: '/photo/mobile/2.jpeg' },
-  { pcimg: '/photo/pc/3.jpeg', mobileimg: '/photo/mobile/3.jpeg' },
-  { pcimg: '/photo/pc/4.jpeg', mobileimg: '/photo/mobile/4.jpeg' },
-  { pcimg: '/photo/pc/5.jpeg', mobileimg: '/photo/mobile/5.jpeg' },
-  { pcimg: '/photo/pc/6.jpeg', mobileimg: '/photo/mobile/6.jpeg' },
-  { pcimg: '/photo/pc/7.jpeg', mobileimg: '/photo/mobile/7.jpeg' },
-  { pcimg: '/photo/pc/8.jpeg', mobileimg: '/photo/mobile/8.jpeg' },
+  { pcimg: imageMap3['pc/1'], mobileimg: imageMap3['mobile/1'] },
+  { pcimg: imageMap3['pc/2'], mobileimg: imageMap3['mobile/2'] },
+  { pcimg: imageMap3['pc/3'], mobileimg: imageMap3['mobile/3'] },
+  { pcimg: imageMap3['pc/4'], mobileimg: imageMap3['mobile/4'] },
+  { pcimg: imageMap3['pc/5'], mobileimg: imageMap3['mobile/5'] },
+  { pcimg: imageMap3['pc/6'], mobileimg: imageMap3['mobile/6'] },
+  { pcimg: imageMap3['pc/7'], mobileimg: imageMap3['mobile/7'] },
+  { pcimg: imageMap3['pc/8'], mobileimg: imageMap3['mobile/8'] },
 ]);
 
 let transitionName = ref('slide');

@@ -1173,16 +1173,24 @@ const selectNav = (index) => {
   selectedIndex.value = index;  
 };
 
+// 使用 import.meta.glob 批量导入图片
+const image = import.meta.glob('@/assets/news/*.png', { eager: true });
+// 将导入的图片转换为需要的格式
+const imageMap = Object.keys(image).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.png', ''); // 提取文件名作为 key
+    acc[key] = image[path].default; // 获取图片的默认导出
+    return acc;
+}, {});
 
 const images = ref([
-  { src: '/news/r1.png', alt: 'Image 1', url: 'https://bluearchive-cn.com/news/1119' },
-  { src: '/news/r2.png', alt: 'Image 2', url: 'https://bluearchive-cn.com/news/1041' },
-  { src: '/news/r3.png', alt: 'Image 3', url: 'https://bluearchive-cn.com/news/1008' },
-  { src: '/news/r4.png', alt: 'Image 4', url: 'https://bluearchive-cn.com/news/791' },
-  { src: '/news/r5.png', alt: 'Image 5', url: 'https://bluearchive-cn.com/news/781' },
-  { src: '/news/r6.png', alt: 'Image 6', url: 'https://bluearchive-cn.com/news/686' },
-  { src: '/news/r7.png', alt: 'Image 7', url: 'https://bluearchive-cn.com/news/685' },
-  { src: '/news/r8.png', alt: 'Image 8', url: 'https://bluearchive-cn.com/news/160' },
+  { src: imageMap['r1'], alt: 'Image 1', url: 'https://bluearchive-cn.com/news/1119' },
+  { src: imageMap['r2'], alt: 'Image 2', url: 'https://bluearchive-cn.com/news/1041' },
+  { src: imageMap['r3'], alt: 'Image 3', url: 'https://bluearchive-cn.com/news/1008' },
+  { src: imageMap['r4'], alt: 'Image 4', url: 'https://bluearchive-cn.com/news/791' },
+  { src: imageMap['r5'], alt: 'Image 5', url: 'https://bluearchive-cn.com/news/781' },
+  { src: imageMap['r6'], alt: 'Image 6', url: 'https://bluearchive-cn.com/news/686' },
+  { src: imageMap['r7'], alt: 'Image 7', url: 'https://bluearchive-cn.com/news/685' },
+  { src: imageMap['r8'], alt: 'Image 8', url: 'https://bluearchive-cn.com/news/160' },
 ]);
 const currentImageIndex = ref(0);
 let intervalId2;
@@ -1287,6 +1295,7 @@ const state = reactive({
     { id: 'all', sub: [] } 
   ]
 })
+
 const news = ref([
   { name: '新闻', image: '/news/morenews/news/maintenance.jpeg', title: '10月17日维护更新说明', time: '2024-10-16', web:'https://bluearchive.jp/news/newsJump/327', 
   content:`

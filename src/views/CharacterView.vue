@@ -71,7 +71,7 @@
                 </div>
                 <div class="cv">
                   <div class="voice" @click="playAudio();" @mousemove="followMouse" @mouseleave="hideImage">
-                    <img :src=" isShowgif === false ? '/character/voice.png' : '/character/voice_on.gif' ">
+                    <img :src=" isShowgif === false ? imageMap['voice'] : imageMap2['voice_on'] ">
                   </div>
                   <div class="cv_name">
                     <div class="cv2">配音</div>
@@ -1007,13 +1007,28 @@ onBeforeUnmount(() => {
   clearInterval(intervalId1);
 });
 
+const images = import.meta.glob('@/assets/character/**/*.png', { eager: true });
+const imageMap = Object.keys(images).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/character\//, '').replace('.png', '');
+  acc[relativePath] = images[path].default; // 存储完整解析路径
+  return acc;
+}, {});
+// 使用 import.meta.glob 批量导入图片
+const images2 = import.meta.glob('@/assets/character/*.gif', { eager: true });
+// 将导入的图片转换为需要的格式
+const imageMap2 = Object.keys(images2).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.gif', ''); // 提取文件名作为 key
+    acc[key] = images2[path].default; // 获取图片的默认导出
+    return acc;
+}, {});
 const navItems = ref([
-  { src: '/character/bgyx/logo.png', src2: '/character/bgyx/logo_a.png', num: 4 },
-  { src: '/character/shj/logo.png', src2: '/character/shj/logo_a.png', num: 5 },
-  { src: '/character/abds/logo.png', src2: '/character/abds/logo_a.png', num: 0 },
-  { src: '/character/ghn/logo.png', src2: '/character/ghn/logo_a.png', num: 1 },
-  { src: '/character/ssy/logo.png', src2: '/character/ssy/logo_a.png', num: 2 },
-  { src: '/character/qx/logo.png', src2: '/character/qx/logo_a.png', num: 3 },
+  { src: imageMap['bgyx/logo'], src2: imageMap['bgyx/logo_a'], num: 4 },
+  { src: imageMap['shj/logo'], src2: imageMap['shj/logo_a'], num: 5 },
+  { src: imageMap['abds/logo'], src2: imageMap['abds/logo_a'], num: 0 },
+  { src: imageMap['ghn/logo'], src2: imageMap['ghn/logo_a'], num: 1 },
+  { src: imageMap['ssy/logo'], src2: imageMap['ssy/logo_a'], num: 2 },
+  { src: imageMap['qx/logo'], src2: imageMap['qx/logo_a'], num: 3 },
 ]);
 let selectedIndex = ref(0);
 const selectNav = (num) => {  
@@ -1038,52 +1053,413 @@ const updateActiveIndex = () => {
   activeIndex.value = cardArray.value.indexOf('c-active');
 };
 
+
+// 使用 import.meta.glob 批量导入音频文件
+const audioFiles = import.meta.glob('@/assets/character/**/*.mp3', { eager: true });
+const audioMap = Object.keys(audioFiles).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/character\//, '').replace('.mp3', '');
+  acc[relativePath] = audioFiles[path].default; // 存储完整解析路径
+  return acc;
+}, {});
 const school = ref([
-  { students: [], logosrc: '/character/abds/abds_char.png', schoolname: '阿拜多斯' },
-  { students: [], logosrc: '/character/ghn/ghn_char.png', schoolname: '格黑娜' },
-  { students: [], logosrc: '/character/ssy/ssy_char.png', schoolname: '圣三一' },
-  { students: [], logosrc: '/character/qx/qx_char.png', schoolname: '千禧年' },
-  { students: [], logosrc: '/character/bgyx/bgyx_char.png', schoolname: '百鬼夜行' },
-  { students: [], logosrc: '/character/shj/shj_char.png', schoolname: '山海经' },
+  { students: [], logosrc: imageMap['abds/abds_char'], schoolname: '阿拜多斯' },
+  { students: [], logosrc: imageMap['ghn/ghn_char'], schoolname: '格黑娜' },
+  { students: [], logosrc: imageMap['ssy/ssy_char'], schoolname: '圣三一' },
+  { students: [], logosrc: imageMap['qx/qx_char'], schoolname: '千禧年' },
+  { students: [], logosrc: imageMap['bgyx/bgyx_char'], schoolname: '百鬼夜行' },
+  { students: [], logosrc: imageMap['shj/shj_char'], schoolname: '山海经' },
 ]);
 const students1 = ref([
-  { name: '砂狼白子', nameen: 'SHIROKO', fullname: 'SUNAOOKAMI<br/>SHIROKO', cv: '小仓唯', stars: 3, type: '/character/redak.png', head: '/character/abds/shiroko_ua.png', head2: '/character/abds/shiroko_a.png', club: '对策委员会', birthday: '5月16日', card: '/character/abds/shiroko_card.png', cardname: '/character/abds/shiroko.png', gun: '/character/abds/shiroko_gun.png', characterwrap: '/character/abds/shiroko_c.png', voice: '/character/abds/shiroko_v.mp3' }, 
-  { name: '十六夜野宫', nameen: 'NONOMI', fullname: 'IZAYOI<br/>NONOMI', cv: '三浦千幸', stars: 2, type: '/character/yellowak.png', head: '/character/abds/nonomi_ua.png', head2: '/character/abds/nonomi_a.png', club: '对策委员会', birthday: '9月1日', card: '/character/abds/nonomi_card.png', cardname: '/character/abds/nonomi.png', gun: '/character/abds/nonomi_gun.png', characterwrap: '/character/abds/nonomi_c.png', voice: '/character/abds/nonomi_v.mp3' },
-  { name: '黑见芹香', nameen: 'SERIKA', fullname: 'KUROMI<br/>SERIKA', cv: '大桥彩香', stars: 2, type: '/character/redak.png', head: '/character/abds/serika_ua.png', head2: '/character/abds/serika_a.png', club: '对策委员会', birthday: '6月25日', card: '/character/abds/serika_card.png', cardname: '/character/abds/serika.png', gun: '/character/abds/serika_gun.png', characterwrap: '/character/abds/serika_c.png', voice: '/character/abds/serika_v.mp3' },
-  { name: '奥空绫音', nameen: 'AYANE', fullname: 'OKUSORA<br/>AYANE', cv: '原田彩枫', stars: 2, type: '/character/yellowtt.png', head: '/character/abds/ayane_ua.png', head2: '/character/abds/ayane_a.png', club: '对策委员会', birthday: '11月12日', card: '/character/abds/ayane_card.png', cardname: '/character/abds/ayane.png', gun: '/character/abds/ayane_gun.png', characterwrap: '/character/abds/ayane_c.png', voice: '/character/abds/ayane_v.mp3' },
-  { name: '小鸟游星野', nameen: 'HOSHINO', fullname: 'TAKANASHI<br/>HOSHINO', cv: '花守由美里', type: '/character/yellowdf.png', stars: 3, head: '/character/abds/hoshino_ua.png', head2: '/character/abds/hoshino_a.png', club: '对策委员会', birthday: '1月2日', card: '/character/abds/hoshino_card.png', cardname: '/character/abds/hoshino.png', gun: '/character/abds/hoshino_gun.png', characterwrap: '/character/abds/hoshino_c.png', voice: '/character/abds/hoshino_v.mp3' },
+  { 
+    name: '砂狼白子', 
+    nameen: 'SHIROKO', 
+    fullname: 'SUNAOOKAMI<br/>SHIROKO', 
+    cv: '小仓唯', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['abds/shiroko_ua'], 
+    head2: imageMap['abds/shiroko_a'], 
+    club: '对策委员会', 
+    birthday: '5月16日', 
+    card: imageMap['abds/shiroko_card'], 
+    cardname: imageMap['abds/shiroko'], 
+    gun: imageMap['abds/shiroko_gun'], 
+    characterwrap: imageMap['abds/shiroko_c'], 
+    voice: audioMap['abds/shiroko_v'] 
+  }, 
+  { 
+    name: '十六夜野宫', 
+    nameen: 'NONOMI', 
+    fullname: 'IZAYOI<br/>NONOMI', 
+    cv: '三浦千幸', 
+    stars: 2, 
+    type: imageMap['yellowak'], 
+    head: imageMap['abds/nonomi_ua'], 
+    head2: imageMap['abds/nonomi_a'], 
+    club: '对策委员会', 
+    birthday: '9月1日', 
+    card: imageMap['abds/nonomi_card'], 
+    cardname: imageMap['abds/nonomi'], 
+    gun: imageMap['abds/nonomi_gun'], 
+    characterwrap: imageMap['abds/nonomi_c'], 
+    voice: audioMap['abds/nonomi_v'] 
+  },
+  { 
+    name: '黑见芹香', 
+    nameen: 'SERIKA', 
+    fullname: 'KUROMI<br/>SERIKA', 
+    cv: '大桥彩香', 
+    stars: 2, 
+    type: imageMap['redak'], 
+    head: imageMap['abds/serika_ua'], 
+    head2: imageMap['abds/serika_a'], 
+    club: '对策委员会', 
+    birthday: '6月25日', 
+    card: imageMap['abds/serika_card'], 
+    cardname: imageMap['abds/serika'], 
+    gun: imageMap['abds/serika_gun'], 
+    characterwrap: imageMap['abds/serika_c'], 
+    voice: audioMap['abds/serika_v'] 
+  },
+  { 
+    name: '奥空绫音', 
+    nameen: 'AYANE', 
+    fullname: 'OKUSORA<br/>AYANE', 
+    cv: '原田彩枫', 
+    stars: 2, 
+    type: imageMap['yellowtt'], 
+    head: imageMap['abds/ayane_ua'], 
+    head2: imageMap['abds/ayane_a'], 
+    club: '对策委员会', 
+    birthday: '11月12日', 
+    card: imageMap['abds/ayane_card'], 
+    cardname: imageMap['abds/ayane'], 
+    gun: imageMap['abds/ayane_gun'], 
+    characterwrap: imageMap['abds/ayane_c'], 
+    voice: audioMap['abds/ayane_v'] 
+  },
+  { 
+    name: '小鸟游星野', 
+    nameen: 'HOSHINO', 
+    fullname: 'TAKANASHI<br/>HOSHINO', 
+    cv: '花守由美里', 
+    type: imageMap['yellowdf'], 
+    stars: 3, 
+    head: imageMap['abds/hoshino_ua'], 
+    head2: imageMap['abds/hoshino_a'], 
+    club: '对策委员会', 
+    birthday: '1月2日', 
+    card: imageMap['abds/hoshino_card'], 
+    cardname: imageMap['abds/hoshino'], 
+    gun: imageMap['abds/hoshino_gun'], 
+    characterwrap: imageMap['abds/hoshino_c'], 
+    voice: audioMap['abds/hoshino_v'] 
+  },
 ]);
 school.value[0].students = students1.value;
 const students2 = ref([
-  { name: '空崎日奈', nameen: 'HINA', fullname: 'SORASAKI<br/>HINA', cv: '广桥凉', stars: 3, type: '/character/redak.png', head: '/character/ghn/1ua.png', head2: '/character/ghn/1a.png', club: '风纪委员会', birthday: '2月19日', card: '/character/ghn/1card.png', cardname: '/character/ghn/1.png', gun: '/character/ghn/1gun.png', characterwrap: '/character/ghn/1c.png', voice:'/character/ghn/1v.mp3' }, 
-  { name: '银镜伊织', nameen: 'IORI', fullname: 'SHIROMI<br/>IORI', cv: '佐仓绫音', stars: 3, type: '/character/yellowak.png', head: '/character/ghn/2ua.png', head2: '/character/ghn/2a.png', club: '风纪委员会', birthday: '11月8日', card: '/character/ghn/2card.png', cardname: '/character/ghn/2.png', gun: '/character/ghn/2gun.png', characterwrap: '/character/ghn/2c.png', voice:'/character/ghn/2v.mp3' },
-  { name: '陆八魔阿露', nameen: 'ARU', fullname: 'RIKUHACHIMA<br/>ARU', cv: '近藤玲奈', stars: 3, type: '/character/redak.png', head: '/character/ghn/3ua.png', head2: '/character/ghn/3a.png', club: '便利屋68', birthday: '3月12日', card: '/character/ghn/3card.png', cardname: '/character/ghn/3.png', gun: '/character/ghn/3gun.png', characterwrap: '/character/ghn/3c.png', voice:'/character/ghn/3v.mp3' },
-  { name: '浅黄睦月', nameen: 'MUTSUKI', fullname: 'ASAGI<br/>MUTSUKI', cv: '大久保瑠美', stars: 2, type: '/character/redak.png', head: '/character/ghn/4ua.png', head2: '/character/ghn/4a.png', club: '便利屋68', birthday: '7月29日', card: '/character/ghn/4card.png', cardname: '/character/ghn/4.png', gun: '/character/ghn/4gun.png', characterwrap: '/character/ghn/4c.png', voice:'/character/ghn/4v.mp3' },
-  { name: '黑馆晴奈', nameen: 'HARUNA', fullname: 'KURODATE<br/>HARUNA', cv: '田所梓', stars: 3, type: '/character/blueak.png', head: '/character/ghn/5ua.png', head2: '/character/ghn/5a.png', club: '美食研究会', birthday: '3月1日', card: '/character/ghn/5card.png', cardname: '/character/ghn/5.png', gun: '/character/ghn/5gun.png', characterwrap: '/character/ghn/5c.png', voice:'/character/ghn/5v.mp3' },
+  { 
+    name: '空崎日奈', 
+    nameen: 'HINA', 
+    fullname: 'SORASAKI<br/>HINA', 
+    cv: '广桥凉', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['ghn/1ua'], 
+    head2: imageMap['ghn/1a'], 
+    club: '风纪委员会', 
+    birthday: '2月19日', 
+    card: imageMap['ghn/1card'], 
+    cardname: imageMap['ghn/1'], 
+    gun: imageMap['ghn/1gun'], 
+    characterwrap: imageMap['ghn/1c'], 
+    voice: audioMap['ghn/1v'] 
+  }, 
+  { 
+    name: '银镜伊织', 
+    nameen: 'IORI', 
+    fullname: 'SHIROMI<br/>IORI', 
+    cv: '佐仓绫音', 
+    stars: 3, 
+    type: imageMap['yellowak'], 
+    head: imageMap['ghn/2ua'], 
+    head2: imageMap['ghn/2a'], 
+    club: '风纪委员会', 
+    birthday: '11月8日', 
+    card: imageMap['ghn/2card'], 
+    cardname: imageMap['ghn/2'], 
+    gun: imageMap['ghn/2gun'], 
+    characterwrap: imageMap['ghn/2c'], 
+    voice: audioMap['ghn/2v'] 
+  },
+  { 
+    name: '陆八魔阿露', 
+    nameen: 'ARU', 
+    fullname: 'RIKUHACHIMA<br/>ARU', 
+    cv: '近藤玲奈', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['ghn/3ua'], 
+    head2: imageMap['ghn/3a'], 
+    club: '便利屋68', 
+    birthday: '3月12日', 
+    card: imageMap['ghn/3card'], 
+    cardname: imageMap['ghn/3'], 
+    gun: imageMap['ghn/3gun'], 
+    characterwrap: imageMap['ghn/3c'], 
+    voice: audioMap['ghn/3v'] 
+  },
+  { 
+    name: '浅黄睦月', 
+    nameen: 'MUTSUKI', 
+    fullname: 'ASAGI<br/>MUTSUKI', 
+    cv: '大久保瑠美', 
+    stars: 2, 
+    type: imageMap['redak'], 
+    head: imageMap['ghn/4ua'], 
+    head2: imageMap['ghn/4a'], 
+    club: '便利屋68', 
+    birthday: '7月29日', 
+    card: imageMap['ghn/4card'], 
+    cardname: imageMap['ghn/4'], 
+    gun: imageMap['ghn/4gun'], 
+    characterwrap: imageMap['ghn/4c'], 
+    voice: audioMap['ghn/4v'] 
+  },
+  { 
+    name: '黑馆晴奈', 
+    nameen: 'HARUNA', 
+    fullname: 'KURODATE<br/>HARUNA', 
+    cv: '田所梓', 
+    stars: 3, 
+    type: imageMap['blueak'], 
+    head: imageMap['ghn/5ua'], 
+    head2: imageMap['ghn/5a'], 
+    club: '美食研究会', 
+    birthday: '3月1日', 
+    card: imageMap['ghn/5card'], 
+    cardname: imageMap['ghn/5'], 
+    gun: imageMap['ghn/5gun'], 
+    characterwrap: imageMap['ghn/5c'], 
+    voice: audioMap['ghn/5v'] 
+  },
 ]);
 school.value[1].students = students2.value;
 const students3 = ref([
-  { name: '阿慈谷日富美', nameen: 'HIFUMI', fullname: 'AJITANI<br/>HIFUMI', cv: '本渡枫', stars: 3, type: '/character/yellowat.png', head: '/character/ssy/1ua.png', head2: '/character/ssy/1a.png', club: '补习部', birthday: '11月27日', card: '/character/ssy/1card.png', cardname: '/character/ssy/1.png', gun: '/character/ssy/1gun.png', characterwrap: '/character/ssy/1c.png', voice:'/character/ssy/1v.mp3' }, 
-  { name: '白洲梓', nameen: 'AZUSA', fullname: 'SHIRASU<br/>AZUSA', cv: '种田梨沙', stars: 3, type: '/character/redak.png', head: '/character/ssy/azusa_ua.png', head2: '/character/ssy/azusa_a.png', club: '补习部', birthday: '12月26日', card: '/character/ssy/azusa_card.png', cardname: '/character/ssy/azusa.png', gun: '/character/ssy/azusa_gun.png', characterwrap: '/character/ssy/azusa_c.png', voice:'/character/ssy/azusa_v.mp3' },
-  { name: '羽川莲见', nameen: 'HASUMI', fullname: 'HANEKAWA<br/>HASUMI', cv: '濑户麻沙美', stars: 2, type: '/character/yellowak.png', head: '/character/ssy/3ua.png', head2: '/character/ssy/3a.png', club: '便利屋68', birthday: '3月12日', card: '/character/ssy/3card.png', cardname: '/character/ssy/3.png', gun: '/character/ssy/3gun.png', characterwrap: '/character/ssy/3c.png', voice:'/character/ssy/3v.mp3' },
+  { 
+    name: '阿慈谷日富美', 
+    nameen: 'HIFUMI', 
+    fullname: 'AJITANI<br/>HIFUMI', 
+    cv: '本渡枫', 
+    stars: 3, 
+    type: imageMap['yellowat'], 
+    head: imageMap['ssy/1ua'], 
+    head2: imageMap['ssy/1a'], 
+    club: '补习部', 
+    birthday: '11月27日', 
+    card: imageMap['ssy/1card'], 
+    cardname: imageMap['ssy/1'], 
+    gun: imageMap['ssy/1gun'], 
+    characterwrap: imageMap['ssy/1c'], 
+    voice: audioMap['ssy/1v'] 
+  }, 
+  { 
+    name: '白洲梓', 
+    nameen: 'AZUSA', 
+    fullname: 'SHIRASU<br/>AZUSA', 
+    cv: '种田梨沙', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['ssy/azusa_ua'], 
+    head2: imageMap['ssy/azusa_a'], 
+    club: '补习部', 
+    birthday: '12月26日', 
+    card: imageMap['ssy/azusa_card'], 
+    cardname: imageMap['ssy/azusa'], 
+    gun: imageMap['ssy/azusa_gun'], 
+    characterwrap: imageMap['ssy/azusa_c'], 
+    voice: audioMap['ssy/azusa_v'] 
+  },
+  { 
+    name: '羽川莲见', 
+    nameen: 'HASUMI', 
+    fullname: 'HANEKAWA<br/>HASUMI', 
+    cv: '濑户麻沙美', 
+    stars: 2, 
+    type: imageMap['yellowak'], 
+    head: imageMap['ssy/3ua'], 
+    head2: imageMap['ssy/3a'], 
+    club: '便利屋68', 
+    birthday: '3月12日', 
+    card: imageMap['ssy/3card'], 
+    cardname: imageMap['ssy/3'], 
+    gun: imageMap['ssy/3gun'], 
+    characterwrap: imageMap['ssy/3c'], 
+    voice: audioMap['ssy/3v'] 
+  }
 ]);
 school.value[2].students = students3.value;
 const students4 = ref([
-  { name: '早濑优香', nameen: 'YUUKA', fullname: 'HAYASE<br/>YUUKA', cv: '春花兰', stars: 2, type: '/character/reddf.png', head: '/character/qx/1ua.png', head2: '/character/qx/1a.png', club: '研讨会', birthday: '3月14日', card: '/character/qx/1card.png', cardname: '/character/qx/1.png', gun: '/character/qx/1gun.png', characterwrap: '/character/qx/1c.png', voice:'/character/qx/1v.mp3' }, 
-  { name: '角楯花凛', nameen: 'KARIN', fullname: 'KAKUDATE<br/>KARIN', cv: '沼仓爱美', stars: 3, type: '/character/yellowak.png', head: '/character/qx/2ua.png', head2: '/character/qx/2a.png', club: 'C&C', birthday: '2月2日', card: '/character/qx/2card.png', cardname: '/character/qx/2.png', gun: '/character/qx/2gun.png', characterwrap: '/character/qx/2c.png', voice:'/character/qx/2v.mp3' },
-  { name: '才羽桃', nameen: 'MOMOI', fullname: 'SAIBA<br/>MOMOI', cv: '徳井青空', stars: 2, type: '/character/yellowak.png', head: '/character/qx/3ua.png', head2: '/character/qx/3a.png', club: '游戏开发部', birthday: '12月8日', card: '/character/qx/3card.png', cardname: '/character/qx/3.png', gun: '/character/qx/3gun.png', characterwrap: '/character/qx/3c.png', voice:'/character/qx/3v.mp3' },
-  { name: '才羽绿', nameen: 'MIDORI', fullname: 'SAIBA<br/>MIDORI', cv: '高田忧希', stars: 3, type: '/character/yellowak.png', head: '/character/qx/4ua.png', head2: '/character/qx/4a.png', club: '游戏开发部', birthday: '12月8日', card: '/character/qx/4card.png', cardname: '/character/qx/4.png', gun: '/character/qx/4gun.png', characterwrap: '/character/qx/4c.png', voice:'/character/qx/4v.mp3' },
-  { name: '天童爱丽丝', nameen: 'ARIS', fullname: 'TENDOU<br/>ARIS', cv: '田中美海', stars: 3, type: '/character/blueak.png', head: '/character/qx/5ua.png', head2: '/character/qx/5a.png', club: '游戏开发部', birthday: '3月25日', card: '/character/qx/5card.png', cardname: '/character/qx/5.png', gun: '/character/qx/5gun.png', characterwrap: '/character/qx/5c.png', voice:'/character/qx/5v.mp3' },
+  { 
+    name: '早濑优香', 
+    nameen: 'YUUKA', 
+    fullname: 'HAYASE<br/>YUUKA', 
+    cv: '春花兰', 
+    stars: 2, 
+    type: imageMap['reddf'], 
+    head: imageMap['qx/1ua'], 
+    head2: imageMap['qx/1a'], 
+    club: '研讨会', 
+    birthday: '3月14日', 
+    card: imageMap['qx/1card'], 
+    cardname: imageMap['qx/1'], 
+    gun: imageMap['qx/1gun'], 
+    characterwrap: imageMap['qx/1c'], 
+    voice: audioMap['qx/1v'] 
+  }, 
+  { 
+    name: '角楯花凛', 
+    nameen: 'KARIN', 
+    fullname: 'KAKUDATE<br/>KARIN', 
+    cv: '沼仓爱美', 
+    stars: 3, 
+    type: imageMap['yellowak'], 
+    head: imageMap['qx/2ua'], 
+    head2: imageMap['qx/2a'], 
+    club: 'C&C', 
+    birthday: '2月2日', 
+    card: imageMap['qx/2card'], 
+    cardname: imageMap['qx/2'], 
+    gun: imageMap['qx/2gun'], 
+    characterwrap: imageMap['qx/2c'], 
+    voice: audioMap['qx/2v'] 
+  },
+  { 
+    name: '才羽桃', 
+    nameen: 'MOMOI', 
+    fullname: 'SAIBA<br/>MOMOI', 
+    cv: '徳井青空', 
+    stars: 2, 
+    type: imageMap['yellowak'], 
+    head: imageMap['qx/3ua'], 
+    head2: imageMap['qx/3a'], 
+    club: '游戏开发部', 
+    birthday: '12月8日', 
+    card: imageMap['qx/3card'], 
+    cardname: imageMap['qx/3'], 
+    gun: imageMap['qx/3gun'], 
+    characterwrap: imageMap['qx/3c'], 
+    voice: audioMap['qx/3v'] 
+  },
+  { 
+    name: '才羽绿', 
+    nameen: 'MIDORI', 
+    fullname: 'SAIBA<br/>MIDORI', 
+    cv: '高田忧希', 
+    stars: 3, 
+    type: imageMap['yellowak'], 
+    head: imageMap['qx/4ua'], 
+    head2: imageMap['qx/4a'], 
+    club: '游戏开发部', 
+    birthday: '12月8日', 
+    card: imageMap['qx/4card'], 
+    cardname: imageMap['qx/4'], 
+    gun: imageMap['qx/4gun'], 
+    characterwrap: imageMap['qx/4c'], 
+    voice: audioMap['qx/4v'] 
+  },
+  { 
+    name: '天童爱丽丝', 
+    nameen: 'ARIS', 
+    fullname: 'TENDOU<br/>ARIS', 
+    cv: '田中美海', 
+    stars: 3, 
+    type: imageMap['blueak'], 
+    head: imageMap['qx/5ua'], 
+    head2: imageMap['qx/5a'], 
+    club: '游戏开发部', 
+    birthday: '3月25日', 
+    card: imageMap['qx/5card'], 
+    cardname: imageMap['qx/5'], 
+    gun: imageMap['qx/5gun'], 
+    characterwrap: imageMap['qx/5c'], 
+    voice: audioMap['qx/5v'] 
+  }
 ]);
 school.value[3].students = students4.value;
 const students5 = ref([
-  { name: '和乐千世', nameen: 'CHISE', fullname: 'WARAKU<br/>CHISE', cv: '岛村侑', stars: 2, type: '/character/blueak.png', head: '/character/bgyx/1ua.png', head2: '/character/bgyx/1a.png', club: '阴阳部', birthday: '7月13日', card: '/character/bgyx/1card.png', cardname: '/character/bgyx/1.png', gun: '/character/bgyx/1gun.png', characterwrap: '/character/bgyx/1c.png', voice:'/character/bgyx/1v.mp3' }, 
-  { name: '久田泉奈', nameen: 'IZUNA', fullname: 'KUDA<br/>IZUNA', cv: '阿澄佳奈', stars: 3, type: '/character/blueak.png', head: '/character/bgyx/2ua.png', head2: '/character/bgyx/2a.png', club: '忍术研究部', birthday: '12月16日', card: '/character/bgyx/2card.png', cardname: '/character/bgyx/2.png', gun: '/character/bgyx/2gun.png', characterwrap: '/character/bgyx/2c.png', voice:'/character/bgyx/2v.mp3' },
+  { 
+    name: '和乐千世', 
+    nameen: 'CHISE', 
+    fullname: 'WARAKU<br/>CHISE', 
+    cv: '岛村侑', 
+    stars: 2, 
+    type: imageMap['blueak'], 
+    head: imageMap['bgyx/1ua'], 
+    head2: imageMap['bgyx/1a'], 
+    club: '阴阳部', 
+    birthday: '7月13日', 
+    card: imageMap['bgyx/1card'], 
+    cardname: imageMap['bgyx/1'], 
+    gun: imageMap['bgyx/1gun'], 
+    characterwrap: imageMap['bgyx/1c'], 
+    voice: audioMap['bgyx/1v'] 
+  }, 
+  { 
+    name: '久田泉奈', 
+    nameen: 'IZUNA', 
+    fullname: 'KUDA<br/>IZUNA', 
+    cv: '阿澄佳奈', 
+    stars: 3, 
+    type: imageMap['blueak'], 
+    head: imageMap['bgyx/2ua'], 
+    head2: imageMap['bgyx/2a'], 
+    club: '忍术研究部', 
+    birthday: '12月16日', 
+    card: imageMap['bgyx/2card'], 
+    cardname: imageMap['bgyx/2'], 
+    gun: imageMap['bgyx/2gun'], 
+    characterwrap: imageMap['bgyx/2c'], 
+    voice: audioMap['bgyx/2v'] 
+  }
 ]);
 school.value[4].students = students5.value;
 const students6 = ref([
-  { name: '春原瞬', nameen: 'SHUN', fullname: 'SUNOHARA<br/>SHUN', cv: '伊藤静', stars: 3, type: '/character/redak.png', head: '/character/shj/1ua.png', head2: '/character/shj/1a.png', club: '梅花园', birthday: '2月5日', card: '/character/shj/1card.png', cardname: '/character/shj/1.png', gun: '/character/shj/1gun.png', characterwrap: '/character/shj/1c.png', voice:'/character/shj/1v.mp3' }, 
-  { name: '药子纱绫', nameen: 'SAYA', fullname: 'YAKUSHI<br/>SAYA', cv: '田村由加莉', stars: 3, type: '/character/redak.png', head: '/character/shj/2ua.png', head2: '/character/shj/2a.png', club: '炼丹研究会', birthday: '1月3日', card: '/character/shj/2card.png', cardname: '/character/shj/2.png', gun: '/character/shj/2gun.png', characterwrap: '/character/shj/2c.png', voice:'/character/shj/2v.mp3' },
+  { 
+    name: '春原瞬', 
+    nameen: 'SHUN', 
+    fullname: 'SUNOHARA<br/>SHUN', 
+    cv: '伊藤静', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['shj/1ua'], 
+    head2: imageMap['shj/1a'], 
+    club: '梅花园', 
+    birthday: '2月5日', 
+    card: imageMap['shj/1card'], 
+    cardname: imageMap['shj/1'], 
+    gun: imageMap['shj/1gun'], 
+    characterwrap: imageMap['shj/1c'], 
+    voice: audioMap['shj/1v'] 
+  }, 
+  { 
+    name: '药子纱绫', 
+    nameen: 'SAYA', 
+    fullname: 'YAKUSHI<br/>SAYA', 
+    cv: '田村由加莉', 
+    stars: 3, 
+    type: imageMap['redak'], 
+    head: imageMap['shj/2ua'], 
+    head2: imageMap['shj/2a'], 
+    club: '炼丹研究会', 
+    birthday: '1月3日', 
+    card: imageMap['shj/2card'], 
+    cardname: imageMap['shj/2'], 
+    gun: imageMap['shj/2gun'], 
+    characterwrap: imageMap['shj/2c'], 
+    voice: audioMap['shj/2v'] 
+  }
 ]);
 school.value[5].students = students6.value;
 let selectedStd = ref(0);

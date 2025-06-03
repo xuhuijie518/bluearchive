@@ -2,7 +2,7 @@
   <div id="homev">
     <div class="videoContainer">
       <video autoplay loop muted playsinline class="background-video">
-        <source src="/home/background2.mp4" type="video/mp4" />
+        <source src="/home/background.mp4" type="video/mp4" />
       </video>
     </div>
     <div class="sixteenplus">
@@ -436,13 +436,22 @@ img {
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, inject, onBeforeUnmount } from 'vue';
 import { useHoverFollower } from '@/components/useHoverFollower'
+// 使用 import.meta.glob 批量导入图片
+const images2 = import.meta.glob('@/assets/home/*.png', { eager: true });
+// 将导入的图片转换为需要的格式
+const imageMap = Object.keys(images2).reduce((acc, path) => {
+    const key = path.split('/').pop().replace('.png', ''); // 提取文件名作为 key
+    acc[key] = images2[path].default; // 获取图片的默认导出
+    return acc;
+}, {});
+
 const isPlaying = inject('isPlaying');
 const isVisible2 = inject('isVisible2');
 let intervalId;
 const images = ref([
-  { src: '/home/r1.png', alt: 'Image 1', url: 'https://bluearchive-cn.com/news/1041' },
-  { src: '/home/r2.png', alt: 'Image 2', url: 'https://bluearchive-cn.com/news/1119' },
-  { src: '/home/r3.png', alt: 'Image 3', url: 'https://bluearchive-cn.com/news/1008' },
+  { src: imageMap['r1'], alt: 'Image 1', url: 'https://bluearchive-cn.com/news/1041' },
+  { src: imageMap['r2'], alt: 'Image 2', url: 'https://bluearchive-cn.com/news/1119' },
+  { src: imageMap['r3'], alt: 'Image 3', url: 'https://bluearchive-cn.com/news/1008' },
 ]);
 const currentIndex = ref(0);
 const nextImage = () => {
@@ -503,5 +512,4 @@ const openModal2 = () => {
 };
 
 const { hoverArea, followImage, followImage2 } = useHoverFollower('[class*="hoverarea"]', 'followImage', 'followImage2');
-
 </script>
