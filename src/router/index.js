@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import NewsView from '../views/NewsView.vue'
 import SetView from '../views/SetView.vue'
@@ -6,7 +6,7 @@ import SetViewChild from '../views/SetViewChild.vue'
 import CharacterView from '../views/CharacterView.vue'
 import PhotoView from '../views/PhotoView.vue'
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', redirect: '/home' },
     {
