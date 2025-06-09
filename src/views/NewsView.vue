@@ -13,7 +13,7 @@
           <img src="/news/10022.png" alt="title"/>
         </div>
         <div class="navword">
-          <div v-for="(item, index) in navItems" :key="index" class="nav-link"><div @click="selectNav(index);changeCategory(item.type)" class="hoverarea" :class="{ selected: selectedIndex === index }">{{ item.name }}</div><p v-if="index !== 3">&#8226;</p></div>
+          <div v-for="(item, index) in navItems" :key="index" class="nav-link"><div @click="selectNav2(index);changeCategory2(item.type)" class="hoverarea" :class="{ selected: selectedIndex2 === index }">{{ item.name }}</div><p v-if="index !== 3">&#8226;</p></div>
         </div>
         <div class="split">
           <img src="/news/10025.png"/>
@@ -22,7 +22,7 @@
           <img src="/news/10023.png"/>
         </div>
         <div id="newscontent">
-          <div v-for="(item, index) in displayData.slice(0, 4)" :key="index" class="item hoverarea" @click="navigateToUrl(item.web)">
+          <div v-for="(item, index) in displayData2.slice(0, 4)" :key="index" class="item hoverarea" @click="navigateToUrl(item.web)">
             <div class="name">{{ item.name }}</div>
             <div class="time">{{ formatDate(item.time) }}</div>
             <div class="newstitle">{{ item.title }}</div>
@@ -82,59 +82,64 @@
       <div id="close" @click="morenew" class="hoverarea">
         <img src="/photo/close.png">
       </div>
-      <div id="close2" @click="morenew">返回 >></div>
-
-      <div class="pagination">
-        <div class="hoverarea" @click="prev" :class="state.currentPage === 1 ? 'pageUnhover_l' : 'prev'"></div>
-        <div class="pagenum hoverarea"
-          v-for="page in visiblePages"
-          :key="page"
-          :class="{ pagenumactive : page === state.currentPage }"
-          @click="goToPage(page)"
-        >
-        {{ page }}
-        </div>
-        <div class="hoverarea" @click="next" :class="state.currentPage === totalPages ? 'pageUnhover_r' : 'next'"></div>
-      </div>
+      
 
       <div class="split2">
         <div></div>
       </div>
-      <transition
-      :name="state.transitionName"
-      mode="out-in"
-      >
-        <div id="newscontainer" :key="state.currentPage"
-          @wheel="handleScroll" 
-          @touchstart="startTouch2" 
-          @touchmove="moveTouch2" 
-          @touchend="endTouch2"
+      <div class="mobilenewscon">
+        <transition
+        :name="state.transitionName"
+        mode="out-in"
         >
-          <div 
-            class="newsc"
-            v-for="(item, index) in displayData"
-            :key="index"
+          <div id="newscontainer" :key="state.currentPage"
+            @wheel="handleScroll" 
+            @touchstart="startTouch2" 
+            @touchmove="moveTouch2" 
+            @touchend="endTouch2"
           >
-            <div class="container" @mousemove="followMouse" @mouseleave="hideImage">
-              <div class="image"><img :src="item.image"></div>
-              <div class="name2">{{ item.name }}</div>
-              <div class="time2">{{ formatDate(item.time) }}</div>
-              <div class="newstitle2">{{ item.title }}</div>
-              <div class="content" v-html="item.content"></div>
-              <div id="changebutton">
-                <span>READ MORE</span>
-                <div class="iconbox"></div>
+            <div 
+              class="newsc"
+              v-for="(item, index) in displayData"
+              :key="index"
+            >
+              <div class="container" @mousemove="followMouse" @mouseleave="hideImage">
+                <div class="image"><img :src="item.image"></div>
+                <div class="name2">{{ item.name }}</div>
+                <div class="time2">{{ formatDate(item.time) }}</div>
+                <div class="newstitle2">{{ item.title }}</div>
+                <div class="content" v-html="item.content"></div>
+                <div id="changebutton">
+                  <span>READ MORE</span>
+                  <div class="iconbox"></div>
+                </div>
+              </div>
+              <div class="split3" v-if="index !== 4 && index !== 5">
+                <img src="/news/split.png">
+              </div>
+              <div class="split4" v-if="index !== 5">
+                <img src="/news/split.png">
               </div>
             </div>
-            <div class="split3" v-if="index !== 4 && index !== 5">
-              <img src="/news/split.png">
+          </div>
+        </transition>
+        <div class="pagecon">
+          <div id="close2" @click="morenew">返回 >></div>
+          <div class="pagination">
+            <div class="hoverarea" @click="prev" :class="state.currentPage === 1 ? 'pageUnhover_l' : 'prev'"></div>
+            <div class="pagenum hoverarea"
+              v-for="page in visiblePages"
+              :key="page"
+              :class="{ pagenumactive : page === state.currentPage }"
+              @click="goToPage(page)"
+            >
+            {{ page }}
             </div>
-            <div class="split4" v-if="index !== 5">
-              <img src="/news/split.png">
-            </div>
+            <div class="hoverarea" @click="next" :class="state.currentPage === totalPages ? 'pageUnhover_r' : 'next'"></div>
           </div>
         </div>
-      </transition>
+      </div>
+      
       <div id="switch">
         <div class="prev hoverarea" @click="prev();" :style="{ opacity: state.currentPage === 1 ? 0 : 1 ,pointerEvents: state.currentPage === 1 ? 'none' : 'auto' }">
         </div>
@@ -979,16 +984,43 @@ img {
     height: 0.45vw;
     background-color: #1189f9;
   }
-  #newscontainer {
+  .mobilenewscon {
     position: absolute;
     top: 22vw;
     left: 10vw;
     width: 80vw;
-    height: 144vw;
+    display: flex;
+    flex-direction: column;
+  }
+  #newscontainer {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: start;
+  }
+  .pagecon {
+    width: 100%;
+    height: 10vw;
+    display: flex;
+    position: relative;
+  }
+  #close2 {
+    width: 15vw;
+    height: auto;
+    font-family: "FZLanTYJW_Cu";
+    color: #1289f9;
+    font-size: 3vw;
+    right: -3vw;
+    position: absolute;
+    top: 1vw;
+  }
+  .pagination {
+    position: absolute;
+    left: 48%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .newsc {
     width: 80vw;
@@ -1083,27 +1115,6 @@ img {
     background-size: contain;
     background-repeat: no-repeat;
   }
-  #close2 {
-    position: absolute;
-    width: 15vw;
-    height: auto;
-    top: 77%;
-    right: 10.95%;
-    font-family: "FZLanTYJW_Cu";
-    color: #1289f9;
-    font-size: 3vw;
-    right: 6vw;
-  }
-
-  .pagination {
-    position: absolute;
-    top: 76.5%;
-    left: 48%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
   .prev {
     width: 12vw;
     height: 6vw;
@@ -1172,6 +1183,11 @@ const selectedIndex = ref(0);
 const selectNav = (index) => {  
   selectedIndex.value = index;  
 };
+const selectedIndex2 = ref(0);
+const selectNav2 = (index) => {  
+  selectedIndex2.value = index;  
+};
+
 
 // 使用 import.meta.glob 批量导入图片
 const image = import.meta.glob('@/assets/news/*.png', { eager: true });
@@ -1296,8 +1312,23 @@ const state = reactive({
   ]
 })
 
+
+const image3 = import.meta.glob('@/assets/news/morenews/**/*.png', { eager: true });
+const imageMap3 = Object.keys(image3).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/morenews\//, '').replace('.png', '');
+  acc[relativePath] = image3[path].default; // 存储完整解析路径
+  return acc;
+}, {});
+const image2 = import.meta.glob('@/assets/news/morenews/**/*.jpeg', { eager: true });
+const imageMap2 = Object.keys(image2).reduce((acc, path) => {
+  // 提取相对路径（如 'abds/acb.png'）
+  const relativePath = path.replace(/^.*\/morenews\//, '').replace('.jpeg', '');
+  acc[relativePath] = image2[path].default; // 存储完整解析路径
+  return acc;
+}, {});
 const news = ref([
-  { name: '新闻', image: '/news/morenews/news/maintenance.jpeg', title: '10月17日维护更新说明', time: '2024-10-16', web:'https://bluearchive.jp/news/newsJump/327', 
+  { name: '新闻', image: imageMap2['news/maintenance'], title: '10月17日维护更新说明', time: '2024-10-16', web:'https://bluearchive.jp/news/newsJump/327', 
   content:`
 &nbsp; 
 “欢迎连接【什亭之箱】，老师。”  
@@ -1345,7 +1376,7 @@ const news = ref([
 祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
 《蔚蓝档案》运营团队
 ` },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '2024年10月11日封禁公示说明', time: '2024-10-11',web:'https://bluearchive.jp/news/newsJump/324', 
+  { name: '新闻', image: imageMap2['news/notice'], title: '2024年10月11日封禁公示说明', time: '2024-10-11',web:'https://bluearchive.jp/news/newsJump/324', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  
@@ -1373,7 +1404,7 @@ const news = ref([
  &nbsp; 
   ■ 限时封禁账号（7天/14天）  
   10009*****9 10009*****2 10008*****2 10007*****0 10010*****2 10011*****0 10012*****0 10006*****0 20009*****6 10011*****5 20010*****5 10012*****2 10009*****4 10012*****6 10012*****7 10009*****3 10012*****7 10010*****2 10011*****4 20010*****0 20007*****1 20009*****1 10009*****0 10012*****9 10009*****9 10010*****1 10010*****1 10009*****3 20009*****2 10010*****2 10011*****2 10011*****7 10010*****2 10008*****0 10009*****8 10006*****3 10012*****0 20009*****3 10010*****0 20010*****2 10011*****2 10008*****9 10012*****3 10012*****9 20009*****8 20007*****4 20010*****5 20009*****6 20009*****7 10010*****9 10009*****3 10009*****8 10010*****7 10006*****7 10011*****9 10009*****6 10007*****0 20010*****3 10007*****8  ` },
-  { name: '新闻', image: '/news/morenews/news/note13.jpeg', title: '阿洛娜的日程笔记（第13期）', time: '2024-10-09',web:'https://bluearchive.jp/news/newsJump/324', 
+  { name: '新闻', image: imageMap2['news/note13'], title: '阿洛娜的日程笔记（第13期）', time: '2024-10-09',web:'https://bluearchive.jp/news/newsJump/324', 
   content:`     
  &nbsp; 
   “欢迎连接什亭之箱，老师。”  
@@ -1505,7 +1536,7 @@ const news = ref([
   日程笔记仅供老师参考未来版本更新后活动内容及招募时间等内容，具体活动规则还请老师关注后续官方社媒及游戏内、官网的公告。    
   那么老师，下一期的日程笔记再见！  
    &nbsp;   ` },
-  { name: '新闻', image: '/news/morenews/news/maintenance.jpeg', title: '09月26日维护更新说明', time: '2024-9-25',web:'https://bluearchive.jp/news/newsJump/324', 
+  { name: '新闻', image: imageMap2['news/maintenance'], title: '09月26日维护更新说明', time: '2024-9-25',web:'https://bluearchive.jp/news/newsJump/324', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”    
@@ -1552,7 +1583,7 @@ const news = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '2024年09月20日封禁公示说明', time: '2024-09-20',web:'https://bluearchive.jp/news/newsJump/318', 
+  { name: '新闻', image: imageMap2['news/notice'], title: '2024年09月20日封禁公示说明', time: '2024-09-20',web:'https://bluearchive.jp/news/newsJump/318', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  
@@ -1580,7 +1611,7 @@ const news = ref([
  &nbsp; 
   ■ 限时封禁账号（7天/14天）  
   10007*****9 20007*****5 20007*****7 10009*****7 20009*****0 20007*****2 20010*****3 10010*****2 10007*****2 10011*****8 10009*****8 10011*****1 10007*****0 10009*****3 10009*****9 10007*****3 20007*****6 20010*****8 20006*****1 20009*****3 20010*****4 10009*****8 10011*****2 10008*****4 20010*****1 20010*****5 10009*****1 10006*****3 10006*****9 10011*****5 10012*****5 10010*****9 10011*****9 10011*****7 10008*****8 10011*****6 10011*****5 10012*****9 20009*****1 10012*****1 10009*****7 10012*****1 20008*****9 10007*****4 10011*****6 20009*****4 10007*****3 10009*****2 20007*****3 10010*****0  ` },
-  { name: '新闻', image: '/news/morenews/news/maintenance.jpeg', title: '09月05日维护更新说明', time: '2024-09-04',web:'https://bluearchive.jp/news/newsJump/315', 
+  { name: '新闻', image: imageMap2['news/maintenance'], title: '09月05日维护更新说明', time: '2024-09-04',web:'https://bluearchive.jp/news/newsJump/315', 
   content:`   
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  
@@ -1619,15 +1650,15 @@ const news = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '2024年09月03日封禁公示说明', time: '2024-09-03',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
-  { name: '新闻', image: '/news/morenews/news/note12.png', title: '阿洛娜的日程笔记（第12期）', time: '2024-08-28',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '08月22日维护更新说明', time: '2024-08-21',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '2024年08月20日封禁公示说明', time: '2024-08-20',web:'https://bluearchive.jp/news/newsJump/315' },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '08月10日账号经验值2倍异常问题公告', time: '2024-08-10',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
-  { name: '新闻', image: '/news/morenews/news/notice.jpeg', title: '【总力战：格兹】异常封禁补偿公告', time: '2024-08-09',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
+  { name: '新闻', image: imageMap2['news/notice'], title: '2024年09月03日封禁公示说明', time: '2024-09-03',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
+  { name: '新闻', image: imageMap3['news/note12'], title: '阿洛娜的日程笔记（第12期）', time: '2024-08-28',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
+  { name: '新闻', image: imageMap2['news/notice'], title: '08月22日维护更新说明', time: '2024-08-21',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
+  { name: '新闻', image: imageMap2['news/notice'], title: '2024年08月20日封禁公示说明', time: '2024-08-20',web:'https://bluearchive.jp/news/newsJump/315' },
+  { name: '新闻', image: imageMap2['news/notice'], title: '08月10日账号经验值2倍异常问题公告', time: '2024-08-10',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
+  { name: '新闻', image: imageMap2['news/notice'], title: '【总力战：格兹】异常封禁补偿公告', time: '2024-08-09',web:'https://bluearchive.jp/news/newsJump/315', content:'' },
 ]);
 const notice = ref([
-  { name: '公告', image: '/news/morenews/notice/1.png', title: '【预告】掉落量3倍活动', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/333', 
+  { name: '公告', image: imageMap3['notice/1'], title: '【预告】掉落量3倍活动', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/333', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  
@@ -1651,7 +1682,7 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/2.png', title: '行动点助力计划', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/328', 
+  { name: '公告', image: imageMap3['notice/2'], title: '行动点助力计划', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/328', 
   content:`       
   “欢迎连接【什亭之箱】，老师。”    
   在10月24日 至 10月30日活动期间，每日登录游戏即可从邮箱中领取【行动点×240】！具体规划如下：  
@@ -1665,7 +1696,7 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/3.jpeg', title: '【任务(困难难度)】掉落量2倍！', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/329', 
+  { name: '公告', image: imageMap2['notice/3'], title: '【任务(困难难度)】掉落量2倍！', time: '2024-10-21',web:'https://bluearchive.jp/news/newsJump/329', 
   content:`       
   “欢迎连接【什亭之箱】，老师。”  
    【任务（困难难度）】掉落量2倍将开启！请不要错过哦！    
@@ -1676,7 +1707,7 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/4.jpeg', title: '【预告】活动复刻：夏莱的快乐♥情人节巡逻', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
+  { name: '公告', image: imageMap2['notice/4'], title: '【预告】活动复刻：夏莱的快乐♥情人节巡逻', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
   content:`     
  &nbsp; 
   基沃托斯迎来了情人节！  
@@ -1792,7 +1823,7 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/5.jpeg', title: '【预告】限时招募：美祢', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
+  { name: '公告', image: imageMap2['notice/5'], title: '【预告】限时招募：美祢', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”    
@@ -1858,7 +1889,7 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/6.png', title: '【预告】限时招募：濑名', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
+  { name: '公告', image: imageMap3['notice/6'], title: '【预告】限时招募：濑名', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”    
@@ -1922,17 +1953,17 @@ const notice = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '公告', image: '/news/morenews/notice/7.png', title: '【预告】限时招募：千寻', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/8.jpeg', title: '【预告】综合战术测试：突破 • 轻装甲', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/9.jpeg', title: '【预告】限时活动：夏莱回忆录', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/10.png', title: '【预告】家具互动即将更新', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/11.png', title: '复刻活动【船上的兔子追击者】已开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/12.png', title: '限时招募【茜（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/13.jpeg', title: '限时招募【妮露（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
-  { name: '公告', image: '/news/morenews/notice/14.png', title: '【预告】限时招募：花凛（邦妮）', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap3['notice/7'], title: '【预告】限时招募：千寻', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap2['notice/8'], title: '【预告】综合战术测试：突破 • 轻装甲', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap2['notice/9'], title: '【预告】限时活动：夏莱回忆录', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap3['notice/10'], title: '【预告】家具互动即将更新', time: '2024-10-18',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap3['notice/11'], title: '复刻活动【船上的兔子追击者】已开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap3['notice/12'], title: '限时招募【茜（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap2['notice/13'], title: '限时招募【妮露（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
+  { name: '公告', image: imageMap3['notice/14'], title: '【预告】限时招募：花凛（邦妮）', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/322', content:'' },
 ]);
 const activity = ref([
-  { name: '活动', image: '/news/morenews/activity/1.jpeg', title: '复刻活动【船上的兔子追击者】已开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/325', 
+  { name: '活动', image: imageMap2['activity/1'], title: '复刻活动【船上的兔子追击者】已开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/325', 
   content:`     
  &nbsp; 
   C&amp;C接到逮捕千禧年的问题成员“白兔”的任务。  
@@ -2004,7 +2035,7 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '活动', image: '/news/morenews/activity/2.jpeg', title: '限时招募【茜（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/319', 
+  { name: '活动', image: imageMap2['activity/2'], title: '限时招募【茜（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/319', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”    
@@ -2071,7 +2102,7 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  `},
-  { name: '活动', image: '/news/morenews/activity/3.png', title: '限时招募【妮露（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/316', 
+  { name: '活动', image: imageMap3['activity/3'], title: '限时招募【妮露（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/316', 
   content:`   
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  限定限时复刻招募【不容分说的孤注一掷】即将开启！在本次招募中，3★限定成员“妮露（邦妮）”招募概率得到提升！  
@@ -2144,7 +2175,7 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  `},
-  { name: '活动', image: '/news/morenews/activity/4.png', title: '限时招募【明日奈（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/308', 
+  { name: '活动', image: imageMap3['activity/4'], title: '限时招募【明日奈（邦妮）】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/308', 
   content:`   
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  限时复刻招募【出其不意的帽子戏法】即将开启！在本次招募中，3★成员“明日奈（邦妮）”招募概率得到提升！  
@@ -2215,7 +2246,7 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },
-  { name: '活动', image: '/news/morenews/activity/5.png', title: '总力战【格兹 • 室内战】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/308', 
+  { name: '活动', image: imageMap3['activity/5'], title: '总力战【格兹 • 室内战】开启！', time: '2024-10-17',web:'https://bluearchive.jp/news/newsJump/308', 
   content:`     
  &nbsp; 
   许久之前因财政困难而停止营业的游乐园【斯兰匹亚】发生了原因不明的诡异现象。原本已停止运行的娱乐玩偶和各种娱乐设备竟在夜晚自行启动并开始袭击市民。  
@@ -2328,7 +2359,7 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  `},
-  { name: '活动', image: '/news/morenews/activity/6.jpeg', title: '【特别委托】掉落量2倍！', time: '2024-10-10',web:'https://bluearchive.jp/news/newsJump/308', 
+  { name: '活动', image: imageMap2['activity/6'], title: '【特别委托】掉落量2倍！', time: '2024-10-10',web:'https://bluearchive.jp/news/newsJump/308', 
   content:`     
  &nbsp; 
   “欢迎连接【什亭之箱】，老师。”  
@@ -2340,12 +2371,12 @@ const activity = ref([
  
   祝您游戏愉快，今后也请多多支持《蔚蓝档案》。  
   《蔚蓝档案》运营团队  ` },  
-  { name: '活动', image: '/news/morenews/activity/7.jpeg', title: '限时活动：【新年开胃菜】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/325', content:'' },
-  { name: '活动', image: '/news/morenews/activity/8.jpeg', title: '限时招募【晴奈（新年）】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/319', content:'' },
-  { name: '活动', image: '/news/morenews/activity/9.png', title: '限时招募【风香（新年）】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/316', content:'' },
-  { name: '活动', image: '/news/morenews/activity/10.png', title: '限时招募【亚子】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
-  { name: '活动', image: '/news/morenews/activity/11.png', title: '总力战【回转 FX•野外战】开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
-  { name: '活动', image: '/news/morenews/activity/12.png', title: '夏莱的黄金周指引任务已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
+  { name: '活动', image: imageMap2['activity/7'], title: '限时活动：【新年开胃菜】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/325', content:'' },
+  { name: '活动', image: imageMap2['activity/8'], title: '限时招募【晴奈（新年）】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/319', content:'' },
+  { name: '活动', image: imageMap3['activity/9'], title: '限时招募【风香（新年）】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/316', content:'' },
+  { name: '活动', image: imageMap3['activity/10'], title: '限时招募【亚子】已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
+  { name: '活动', image: imageMap3['activity/11'], title: '总力战【回转 FX•野外战】开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
+  { name: '活动', image: imageMap3['activity/12'], title: '夏莱的黄金周指引任务已开启！', time: '2024-10-03',web:'https://bluearchive.jp/news/newsJump/308', content:'' },
 ]);
 
 const sortedNews = news.value.sort((a, b) => new Date(b.time) - new Date(a.time));
@@ -2362,6 +2393,11 @@ const displayData = computed(() => {
     const startIndex = (state.currentPage - 1) * state.itemsPerPage;
     const endIndex = startIndex + state.itemsPerPage;
     return categoryData.slice(startIndex, endIndex);
+})
+let currentCategory2 = ref('all');
+const displayData2 = computed(() => {
+    const categoryData2 = state.categories.find(cat => cat.id === currentCategory2.value)?.sub || [];
+    return categoryData2;
 })
 const totalPages = computed(() => {
     const { categories, currentCategory, itemsPerPage } = state;
@@ -2407,6 +2443,9 @@ const goToPage = (page) => {
 const changeCategory = category => {
     state.currentCategory = category;
     state.currentPage = 1;
+}
+const changeCategory2 = category => {
+    currentCategory2.value = category;
 }
 
 const formatDate = (dateString) => {

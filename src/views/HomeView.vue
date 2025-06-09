@@ -73,14 +73,18 @@
       <img src="/home/mobile/bg3.png">
     </div>
     <div class="bg4">
-      <video   
+      <!-- <video   
         autoplay  
         muted
         loop
+        playsinline
         class="bg44"  
       >
-        <source src="/home/mobile/arona2.mp4" type="video/mp4" />
-      </video>
+        <source src="/home/mobile/arona.webm" type="video/mp4" />
+      </video> -->
+      <div class="bggif">
+        <img src="/home/mobile/arona.gif">
+      </div>
     </div>
     <div class="sixteenplus">
       <img src="/home/16+.png" alt="适龄16+"/>
@@ -304,6 +308,11 @@ img {
     top: 0;
     z-index: -3;
     overflow: hidden;
+  }
+  .bggif {
+    position: absolute;
+    width: 100%;
+    top: 10vw;
   }
   .bg44 {
     position: absolute;

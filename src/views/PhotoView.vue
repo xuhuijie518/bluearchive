@@ -30,7 +30,7 @@
       name="fade1"
       mode="out-in"
     >
-      <div class="image-container" v-show="show"
+      <div class="image-containerc" v-show="show"
         @touchstart="startTouch" 
         @touchmove="moveTouch" 
         @touchend="endTouch"
@@ -1016,11 +1016,23 @@ img {
     background-color: #1189f9;
   }
   .image-container {
+    width: 76vw;
+    height: 135vw;
+  }
+  .image-containerc {
     position: fixed;
     top: 25vw;
     left: 12vw;
     width: 76vw;
-    height: 135vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .image-pagination {
+    height: 10vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .mobilecomic {
     position: fixed;
@@ -1085,15 +1097,7 @@ img {
     border-radius: 3vw;
   }
 
-  .image-pagination {
-    position: fixed;
-    top: 76.5%;
-    left: 48%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+ 
   .imageprev {
     width: 12vw;
     height: 6vw;
