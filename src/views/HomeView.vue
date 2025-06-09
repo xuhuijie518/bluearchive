@@ -85,6 +85,7 @@
       <div class="bggif">
         <img src="/home/mobile/arona.gif">
       </div>
+      
     </div>
     <div class="sixteenplus">
       <img src="/home/16+.png" alt="适龄16+"/>
