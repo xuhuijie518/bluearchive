@@ -1,9 +1,10 @@
 <template>
-  <div class="main" 
+  <!-- <div class="main" 
     @touchstart="startTouch" 
     @touchmove="moveTouch" 
     @touchend="endTouch"
-  >
+  > -->
+  <div class="main">
     <video   
       v-if="isVideoPlaying"  
       @ended="handleVideoEnd"  
@@ -48,7 +49,7 @@
     </div>
     <div class="scroll">  
       <div v-for="(char, index) in transformedChars" :key="index" class="scroll_char" :style="{ color: char === '\u25C0' ? '#008cff' : '#afb1b5' }">  
-        {{ char }}  
+        {{ char }}
       </div>
       <div class="scroll_font" :style="{color: scrollColor}">
         SCROLL
@@ -63,6 +64,33 @@
 
 
     <!-- 手机端新增 -->
+    <div id="content2">
+      <swiper 
+        :direction="'vertical'"
+        :slides-per-view="1"
+        @swiper="onSwiper"
+        @slideChange="onSlideChange"
+      >
+        <swiper-slide>
+          <HomeView/>
+        </swiper-slide>
+        <swiper-slide>
+          <NewsView/>
+        </swiper-slide>
+        <swiper-slide>
+          <SetView/>
+        </swiper-slide>
+        <swiper-slide>
+          <SetViewChild/>
+        </swiper-slide>
+        <swiper-slide>
+          <CharacterView/>
+        </swiper-slide>
+        <swiper-slide>
+          <PhotoView/>
+        </swiper-slide>
+      </swiper>
+    </div>
     <transition name="fade1">
       <div class="modal2" v-if="isVisible2" @click="closeModal2">
         <div class="modal-content2" @click.stop>
@@ -73,11 +101,11 @@
         </div>
       </div>
     </transition>
-    <div class="mblogo"><img v-if="isHomeRoute" src="/app/LOGO2.png"></div>
+    <!-- <div class="mblogo"><img v-if="isHomeRoute" src="/app/LOGO2.png"></div> -->
     <div class="wxqr" @click="controlShowqr2" :style="{ opacity: isShowqr2 ? 1 : 0 , visibility: isShowqr2 ? 'visible' : 'hidden' }">
       <div class="qrimg"  @click.stop><img src="/app/wxQR.png"></div>
     </div>
-    <div class="floating-box" v-if="!isPhototRoute">
+    <div class="floating-box" v-if="mobileIndex != 5 && morenewshow == false">
         SCROLL
     </div>
     <div class="mobilenav" @click="navLink"><img src="/app/mobile/nav.png"></div>
@@ -86,11 +114,11 @@
       mode="out-in"
     >
       <div class="mbnav" v-show="show">
-        <div class="mblogo"><img v-if="!isHomeRoute" src="/app/LOGO2.png"></div>
+        <div class="mblogo"><img src="/app/LOGO2.png"></div>
         <div class="mbclose" @click="navLink"><img src="/app/mobile/close.png"></div>
         <div class="mbnavlink">
           <div v-for="(link, index) in navLinks" :key="index" class="mbnavchild">
-            <RouterLink
+            <!-- <RouterLink
               :to="link.to"
               style="text-decoration: none;"
               class="mbnavchild2"
@@ -103,7 +131,20 @@
                 <div class="mbtwigtext">.........................</div>
                 <div class="mbno" :class="{ 'ambno': link.num === disabledIndex }">0{{ index+1 }}</div>
               </div>
-            </RouterLink>
+            </RouterLink> -->
+            <div
+              style="text-decoration: none;"
+              class="mbnavchild2"
+              @click="playVideo();closeClick(link.num);goToSlide(link.num);navLink();"
+              :class="{ 'no-click': link.num == mobileIndex, 'activenav': ((mobileIndex == 3 || mobileIndex == 2) && index == 2) || link.num == mobileIndex }"
+            >
+              <div class="mbcn" :style="{ color: link.num == mobileIndex ? '#1289f9':'#2b2b2b' }">{{ link.text }}</div>
+              <div class="down" :style="{ color: link.num == mobileIndex ? '#1289f9':'#afb1b5' }">
+                <div class="mben">{{ link.en }}</div>
+                <div class="mbtwigtext">.........................</div>
+                <div class="mbno" :class="{ 'ambno': link.num == mobileIndex }">0{{ index+1 }}</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="sharecontent2">
@@ -238,6 +279,9 @@
 img {
   -webkit-user-drag: none;  /* 禁用拖动（WebKit） */
   width: 100%;
+}
+#content2{
+  display: none;
 }
 .scroll {
   position: fixed;
@@ -520,6 +564,23 @@ nav a.blue-text{
   top: 0;
   width: 100%;
   height: 100%;
+}
+#content{
+  display: none;
+}
+#content2{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.swiper {
+  height: 100%;
+  overflow: hidden;
+}
+.swiper-slide {
+  height: 100vh;
+  overflow: hidden;
 }
 * {
   cursor: none;
@@ -810,8 +871,10 @@ import { ref, reactive, computed, onMounted, onUnmounted, watch, provide, watchE
 
 const isPlaying = ref(false);
 const isVisible2 = ref(false); 
+const morenewshow = ref(false); 
 provide('isPlaying', isPlaying); 
-provide('isVisible2', isVisible2); 
+provide('isVisible2', isVisible2);
+provide('morenewshow', morenewshow); 
 const route = useRoute();
 
 // 使用 import.meta.glob 批量导入音频文件
@@ -1118,59 +1181,36 @@ const imageMap = Object.keys(images).reduce((acc, path) => {
     acc[key] = images[path].default; // 获取图片的默认导出
     return acc;
 }, {});
-// // 引入 Swiper 组件和模块
-// import { Swiper, SwiperSlide } from 'swiper/vue';
-// import { Pagination, Navigation, Virtual } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/pagination';
-// import 'swiper/css/navigation';
-// import 'swiper/css/virtual';
-// // 配置 Swiper 模块
-// const modules = [Navigation, Pagination, Virtual];
-// let swiperRef = null;
-// const setSwiperRef = (swiper) => {
-//   swiperRef = swiper;
-// };
-// const slideTo = (index) => {
-//   swiperRef?.slideTo(index - 1, 0);
-// };
 
-// // 过滤出可显示在 Swiper 中的路由（通过 meta 配置控制）
-// const routes2 = computed(() =>
-//   router.getRoutes().filter((route) => route.meta?.showInSwiper !== false)
-// );
-// // 根据当前路由计算初始 slide 的索引
-// const initialSlide = computed(() =>
-//   routes2.value.findIndex((r) => r.path === route.path)
-// );
-// // 当 Swiper 滑动时同步路由
-// const onSlideChange = (swiper) => {
-//   const targetRoute = routes2.value[swiper.realIndex];
-//   if (targetRoute) {
-//     router.push(targetRoute.path);
-//   }
-// };
+// 引入 Swiper 组件和模块
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import HomeView from './views/HomeView.vue';
+import NewsView from './views/NewsView.vue'
+import SetView from './views/SetView.vue'
+import SetViewChild from './views/SetViewChild.vue'
+import CharacterView from './views/CharacterView.vue'
+import PhotoView from './views/PhotoView.vue'
+const swiperRef = ref(null);
+const mobileIndex = ref(0);
+const onSwiper = (swiper) => {
+  swiperRef.value = swiper;
+};
 
-// // 检测是否是手机设备
-// const isMobile = ref(false);
-// const checkDevice = () => {
-//   // 简单判断设备类型（可根据需要优化判断逻辑）
-//   isMobile.value = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(
-//     window.navigator.userAgent
-//   ) || window.innerWidth <= 768;
-// };
+const goToSlide = (index) => {
+  if (swiperRef.value) {
+    setTimeout(() => {
+      swiperRef.value.slideTo(index, 0); // 0ms 过渡 = 无动画
+      mobileIndex.value = swiperRef.value.activeIndex;
+    }, 1000); // 延迟 1000 毫秒（1 秒）
+  }
+};
 
-// // 设置默认路由为 Home
-// const setDefaultRoute = () => {
-//   if (route.path === '/' || route.matched.length === 0) {
-//     router.push('/home');
-//   }
-// };
-
-// onMounted(() => {
-//   checkDevice();
-//   setDefaultRoute(); // 设置默认路由
-//   // 监听窗口大小变化，动态更新设备类型
-//   window.addEventListener('resize', checkDevice);
-// });
+const onSlideChange = () => {
+  if (swiperRef.value) {
+    mobileIndex.value = swiperRef.value.activeIndex;
+    morenewshow.value = false;
+  }
+};
 </script>

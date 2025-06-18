@@ -69,6 +69,7 @@
     <div class="bg2">
       <img src="/home/mobile/bg2.png">
     </div>
+    <div class="mblogo"><img src="/app/LOGO2.png"></div>
     <div class="bg3">
       <img src="/home/mobile/bg3.png">
     </div>
@@ -83,7 +84,7 @@
         <source src="/home/mobile/arona.webm" type="video/mp4" />
       </video> -->
       <div class="bggif">
-        <img src="/home/mobile/arona.gif">
+        <img src="/home/mobile/plana.gif">
       </div>
       
     </div>
@@ -263,7 +264,7 @@ img {
   font-size: .62vw;
   margin-top: .5rem;
 }
-#mobilehome {
+#mobilehome, .mblogo {
   visibility: hidden;
 }
 }
@@ -272,6 +273,13 @@ img {
 @media screen and (max-width: 828px) {
   * {
     cursor: none;
+  }
+  .mblogo {
+    position: fixed;
+    width: 26.8vw;
+    height: auto;
+    top: 3vw;
+    left: 5vw;
   }
   img {
     -webkit-user-drag: none;

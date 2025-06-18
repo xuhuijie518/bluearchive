@@ -1159,7 +1159,7 @@ img {
 </style>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, onBeforeUnmount, computed } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, onBeforeUnmount, computed, inject } from 'vue'
 import { useHoverFollower } from '@/components/useHoverFollower'
 const show = ref(false);
 let intervalId1 = [];
@@ -2456,7 +2456,7 @@ const formatDate = (dateString) => {
   return `${year}.${month}.${day}`;
 };
 
-const show5 = ref(false);
+const show5 = inject('morenewshow');
 const morenew = () => {
   show5.value = !show5.value;
 }
