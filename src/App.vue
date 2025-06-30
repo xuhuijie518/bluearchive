@@ -80,7 +80,7 @@
         <swiper-slide>
           <SetView/>
         </swiper-slide>
-        <swiper-slide>
+        <swiper-slide :key="`setchild-${mobileIndex === 3 ? 'active' : 'inactive'}`">
           <SetViewChild/>
         </swiper-slide>
         <swiper-slide>
@@ -1193,6 +1193,8 @@ import SetViewChild from './views/SetViewChild.vue'
 import CharacterView from './views/CharacterView.vue'
 import PhotoView from './views/PhotoView.vue'
 const swiperRef = ref(null);
+const keys = ref([0, 0, 0, 0, 0, 0]) // 用于强制重新挂载组件的 key 数组
+
 const mobileIndex = ref(0);
 const onSwiper = (swiper) => {
   swiperRef.value = swiper;
@@ -1211,6 +1213,7 @@ const onSlideChange = () => {
   if (swiperRef.value) {
     mobileIndex.value = swiperRef.value.activeIndex;
     morenewshow.value = false;
+    // keys.value[swiperRef.value.activeIndex] += 1
   }
 };
 </script>
